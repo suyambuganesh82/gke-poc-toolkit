@@ -102,7 +102,8 @@ locals {
     machine_type       = var.linux_machine_type
     disk_type          = "pd-ssd"
     disk_size_gb       = 30
-    image_type         = "COS"
+    image_type         = "UBUNTU_CONTAINERD"
+#    image_type         = "COS"
     preemptible        = var.preemptible_nodes ? true : false
     enable_secure_boot = true
   }]
