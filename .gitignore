@@ -102,3 +102,4 @@ cli/*.yaml
 *kubeconfig*
 
 .idea/
+/cli/vendor/

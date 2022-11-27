@@ -1,7 +1,7 @@
 module "gke" {
   for_each                = var.cluster_config
   source                  = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster"
-  version                 = "19.0.0"
+  version                 = "24.0.0"
   project_id              = var.project_id
   network                 = var.network
   ip_range_pods           = var.ip_range_pods
