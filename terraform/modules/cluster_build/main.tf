@@ -112,9 +112,9 @@ locals {
   cluster_node_pool = flatten(local.linux_pool)
 
   // These locals are used to construct anthos component depends on rules based on which features are enabled
-  acm_depends_on     = var.anthos_service_mesh ? module.asm : (var.multi_cluster_gateway ? module.mcg : module.hub)
-  asm_depends_on     = var.multi_cluster_gateway ? module.mcg : module.hub
-  gke_hub_depends_on = var.gke_module_bypass ? module.gke : module.gke_module
+#  acm_depends_on     = var.anthos_service_mesh ? module.asm : (var.multi_cluster_gateway ? module.mcg : module.hub)
+#  asm_depends_on     = var.multi_cluster_gateway ? module.mcg : module.hub
+#  gke_hub_depends_on = var.gke_module_bypass ? module.gke : module.gke_module
 
   // Labels to apply to the cluster - Needed for to enable the ASM UI
   asm_label = var.anthos_service_mesh ? {
@@ -148,46 +148,7 @@ module "enabled_google_apis" {
   ]
 }
 
-// Enable Anthos APIs in gke cluster project 
-module "enabled_anthos_apis" {
-  source                      = "terraform-google-modules/project-factory/google//modules/project_services"
-  version                     = "~> 14.0"
-  count                       = var.multi_cluster_gateway || var.config_sync || var.anthos_service_mesh ? 1 : 0
-  project_id                  = var.project_id
-  disable_services_on_destroy = false
 
-  activate_apis = [
-    "iam.googleapis.com",
-    "storage.googleapis.com",
-    "compute.googleapis.com",
-    "logging.googleapis.com",
-    "monitoring.googleapis.com",
-    "containerregistry.googleapis.com",
-    "container.googleapis.com",
-    "binaryauthorization.googleapis.com",
-    "stackdriver.googleapis.com",
-    "iap.googleapis.com",
-    "cloudresourcemanager.googleapis.com",
-    "dns.googleapis.com",
-    "iamcredentials.googleapis.com",
-    "stackdriver.googleapis.com",
-    "anthos.googleapis.com",
-    "gkehub.googleapis.com",
-    "sourcerepo.googleapis.com",
-    "anthosconfigmanagement.googleapis.com",
-    "anthos.googleapis.com",
-    "gkehub.googleapis.com",
-    "multiclusterservicediscovery.googleapis.com",
-    "multiclusteringress.googleapis.com",
-    "trafficdirector.googleapis.com",
-    "meshca.googleapis.com",
-    "meshtelemetry.googleapis.com",
-    "meshconfig.googleapis.com",
-    "multiclustermetering.googleapis.com",
-    "cloudkms.googleapis.com",
-    "multiclustermetering.googleapis.com",
-  ]
-}
 
 // Enable APIs needed in the governance project
 module "enabled_governance_apis" {
@@ -220,21 +181,21 @@ module "service_accounts" {
 
 // Bind the KCC operator Kubernetes service account(KSA) to the 
 // KCC Google Service account(GSA) so the KSA can assume the workload identity users role.
-module "service_account-iam-bindings" {
-  depends_on = [
-    local.gke_hub_depends_on,
-  ]
-  count  = var.config_connector ? 1 : 0
-  source = "terraform-google-modules/iam/google//modules/service_accounts_iam"
-
-  service_accounts = [local.kcc_service_account_email]
-  project          = module.enabled_google_apis.project_id
-  bindings = {
-    "roles/iam.workloadIdentityUser" = [
-      "serviceAccount:${module.enabled_google_apis.project_id}.svc.id.goog[cnrm-system/cnrm-controller-manager]",
-    ]
-  }
-}
+#module "service_account-iam-bindings" {
+#  depends_on = [
+#    local.gke_hub_depends_on,
+#  ]
+#  count  = var.config_connector ? 1 : 0
+#  source = "terraform-google-modules/iam/google//modules/service_accounts_iam"
+#
+#  service_accounts = [local.kcc_service_account_email]
+#  project          = module.enabled_google_apis.project_id
+#  bindings = {
+#    "roles/iam.workloadIdentityUser" = [
+#      "serviceAccount:${module.enabled_google_apis.project_id}.svc.id.goog[cnrm-system/cnrm-controller-manager]",
+#    ]
+#  }
+#}
 
 
 // Create the KMS keyring and owner 
@@ -257,53 +218,3 @@ module "kms" {
   ]
 }
 
-module "hub" {
-  depends_on = [
-    local.gke_hub_depends_on,
-    module.enabled_anthos_apis,
-  ]
-  count             = var.multi_cluster_gateway || var.config_sync || var.anthos_service_mesh ? 1 : 0
-  source            = "../hub"
-  project_id        = var.project_id
-  cluster_config    = var.cluster_config
-  regional_clusters = var.regional_clusters
-}
-
-module "acm" {
-  depends_on = [
-    local.acm_depends_on,
-    module.enabled_anthos_apis,
-  ]
-  count             = var.config_sync ? 1 : 0
-  config_sync_repo  = var.config_sync_repo
-  source            = "../acm"
-  project_id        = var.project_id
-  policy_controller = var.policy_controller
-  cluster_config    = var.cluster_config
-  email             = data.google_client_openid_userinfo.me.email
-}
-
-module "mcg" {
-  depends_on = [
-    module.hub,
-    module.enabled_anthos_apis,
-  ]
-  count          = var.multi_cluster_gateway ? 1 : 0
-  source         = "../mcg"
-  project_id     = var.project_id
-  cluster_config = var.cluster_config
-  vpc_project_id = var.vpc_project_id
-  vpc_name       = var.vpc_name
-}
-
-module "asm" {
-  depends_on = [
-    local.asm_depends_on,
-    module.enabled_anthos_apis,
-
-  ]
-  count          = var.anthos_service_mesh ? 1 : 0
-  source         = "../asm"
-  project_id     = var.project_id
-  cluster_config = var.cluster_config
-}

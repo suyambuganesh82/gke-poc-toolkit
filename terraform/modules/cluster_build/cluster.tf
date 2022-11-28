@@ -78,26 +78,3 @@ module "gke" {
   gke_service_account_email = local.gke_service_account_email
   asm_label                 = local.asm_label
 }
-
-// Add optional Windows Node Pool
-module "windows_nodepool" {
-  depends_on = [
-    local.gke_hub_depends_on,
-  ]
-  count              = var.windows_nodepool ? 1 : 0
-  source             = "../windows_nodepool"
-  cluster_config     = var.cluster_config
-  name               = format("windows-%s", var.node_pool)
-  project_id         = var.project_id
-  initial_node_count = var.initial_node_count
-  min_count          = var.min_node_count
-  max_count          = var.max_node_count
-  disk_size_gb       = 100
-  disk_type          = "pd-ssd"
-  image_type         = "WINDOWS_SAC"
-  machine_type       = var.windows_machine_type
-  service_account    = local.gke_service_account_email
-  // Intergrity Monitoring is not enabled in Windows Node pools yet.
-  enable_integrity_monitoring = false
-  enable_secure_boot          = true
-}
