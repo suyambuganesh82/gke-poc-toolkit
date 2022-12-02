@@ -88,6 +88,24 @@ variable "cluster_config" {
 variable "cluster_node_pool" {
 }
 
+variable "cluster_dns_provider" {
+  type        = string
+  description = "Which in-cluster DNS provider should be used. PROVIDER_UNSPECIFIED (default) or PLATFORM_DEFAULT or CLOUD_DNS."
+  default     = "PROVIDER_UNSPECIFIED"
+}
+
+variable "cluster_dns_scope" {
+  type        = string
+  description = "The scope of access to cluster DNS records. DNS_SCOPE_UNSPECIFIED (default) or CLUSTER_SCOPE or VPC_SCOPE. "
+  default     = "DNS_SCOPE_UNSPECIFIED"
+}
+
+variable "cluster_dns_domain" {
+  type        = string
+  description = "The suffix used for all cluster service records."
+  default     = ""
+}
+
 variable "asm_label" {
 }
 
@@ -102,3 +120,4 @@ variable "gke_keyring_name" {
 variable "gke_key_name" {
   type = string
 }
+

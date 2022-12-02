@@ -49,4 +49,9 @@ module "gke" {
     }
   }
   cluster_resource_labels = var.asm_label
+
+  cluster_dns_provider = each.value.cluster_dns_provider
+  cluster_dns_scope = each.value.cluster_dns_scope
+  cluster_dns_domain = each.value.cluster_dns_domain
+
 }
