@@ -33,7 +33,7 @@ module "cluster-nat" {
     module.vpc,
   ]
   for_each                           = local.distinct_cluster_regions
-  version                            = "~> 4.1.0"
+  version                            = "~> 2.2.1"
   source                             = "terraform-google-modules/cloud-nat/google"
   create_router                      = true
   project_id                         = local.project_id
