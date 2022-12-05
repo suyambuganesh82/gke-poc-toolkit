@@ -30,7 +30,25 @@ module "gke" {
     key_name = "projects/${var.governance_project_id}/locations/${each.value.region}/keyRings/${var.gke_keyring_name}-${each.value.region}/cryptoKeys/${var.gke_key_name}"
   }]
 
-  node_pools = var.cluster_node_pool
+  // Presets for Linux Node Pool
+  node_pools = [{
+    name               = format("linux-nodepool-%s", var.node_pool)
+    initial_node_count = var.initial_node_count
+    min_count          = each.value.min_node_count
+    max_count          = each.value.max_node_count
+    auto_upgrade       = true
+    auto_repair        = true
+    node_metadata      = "GKE_METADATA"
+    machine_type       = each.value.linux_machine_type
+    disk_type          = "pd-ssd"
+    disk_size_gb       = 30
+    image_type         = "UBUNTU_CONTAINERD"
+    #    image_type         = "COS"
+    preemptible        = false
+    enable_secure_boot = true
+  }]
+
+#  node_pools = var.cluster_node_pool
 
   node_pools_oauth_scopes = {
     (var.node_pool) = [
@@ -53,5 +71,6 @@ module "gke" {
   cluster_dns_provider = each.value.cluster_dns_provider
   cluster_dns_scope = each.value.cluster_dns_scope
   cluster_dns_domain = each.value.cluster_dns_domain
-
+  gke_backup_agent_config = "true"
+#  kubernetes_version = ""
 }

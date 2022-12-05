@@ -77,12 +77,17 @@ type VpcConfig struct {
 }
 
 type ClusterConfig struct {
-	ClusterName string   `yaml:"clusterName"`
-	MachineType string   `yaml:"machineType"`
-	ClusterType string   `yaml:"clusterType"`
-	Region      string   `yaml:"region"`
-	Zones       []string `yaml:"[zone]"`
-	SubnetName  string   `yaml:"subnetName"`
+	ClusterName        string   `yaml:"clusterName"`
+	MachineType        string   `yaml:"machineType"`
+	MinNodeCount       string   `yaml:"minNodeCount"`
+	MaxNodeCount       string   `yaml:"maxNodeCount"`
+	ClusterType        string   `yaml:"clusterType"`
+	Region             string   `yaml:"region"`
+	Zones              []string `yaml:"[zone]"`
+	SubnetName         string   `yaml:"subnetName"`
+	ClusterDnsProvider string   `yaml:"clusterDnsProvider"`
+	ClusterDnsScope    string   `yaml:"clusterDnsScope"`
+	ClusterDnsDomain   string   `yaml:"clusterDnsDomain"`
 }
 
 // Create a new config instance.

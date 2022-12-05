@@ -86,6 +86,11 @@ func GenerateTfvars(conf *Config) {
 		clusterVars["Zones"] = strings.Join(conf.ClustersConfig[cc].Zones, ",")
 		clusterVars["SubnetName"] = conf.ClustersConfig[cc].SubnetName
 		clusterVars["MachineType"] = conf.ClustersConfig[cc].MachineType
+		clusterVars["MaxNodeCount"] = conf.ClustersConfig[cc].MaxNodeCount
+		clusterVars["MinNodeCount"] = conf.ClustersConfig[cc].MinNodeCount
+		clusterVars["ClusterDnsProvider"] = conf.ClustersConfig[cc].ClusterDnsProvider
+		clusterVars["ClusterDnsScope"] = conf.ClustersConfig[cc].ClusterDnsScope
+		clusterVars["ClusterDnsDomain"] = conf.ClustersConfig[cc].ClusterDnsDomain
 		tmpl, err := template.ParseFiles("templates/cluster_config.tmpl")
 		if err != nil {
 			log.Fatalf("error parsing cluster_config template: %s", err)
