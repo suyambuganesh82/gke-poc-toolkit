@@ -31,6 +31,8 @@ module "cluster_build" {
   multi_cluster_gateway             = var.multi_cluster_gateway
   anthos_service_mesh               = var.anthos_service_mesh
   gke_module_bypass                 = var.gke_module_bypass
+  add_cluster_firewall_rules        = var.add_cluster_firewall_rules
+  add_master_webhook_firewall_rules = var.add_master_webhook_firewall_rules
 }
 
 variable "project_id" {
@@ -109,7 +111,7 @@ variable "node_pool" {
 }
 
 variable "release_channel" {
-  type = string
+  type    = string
   default = "regular"
 }
 
@@ -190,7 +192,7 @@ variable "cluster_config" {
 }
 
 variable "k8s_users" {
-  type = map(string)
+  type    = map(string)
   default = {
     rbac-demo-auditor = "view"
     rbac-demo-editor  = "edit"
@@ -209,8 +211,20 @@ variable "anthos_service_mesh" {
   default     = true
 }
 
- variable "gke_module_bypass" {
-  type = bool
+variable "gke_module_bypass" {
+  type        = bool
   description = "Experimental: Setting this to true allows you to use the TF GKE resource directly instead of the GKE module"
-  default = false
- }
+  default     = false
+}
+
+variable "add_cluster_firewall_rules" {
+  type        = bool
+  description = "Create additional firewall rules"
+  default     = true
+}
+
+variable "add_master_webhook_firewall_rules" {
+  type        = bool
+  description = "Create master_webhook firewall rules for ports defined in `firewall_inbound_ports`"
+  default     = true
+}

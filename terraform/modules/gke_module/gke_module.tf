@@ -8,6 +8,7 @@ module "gke" {
   ip_range_services       = var.ip_range_services
   release_channel         = var.release_channel
   initial_node_count      = var.initial_node_count
+  remove_default_node_pool = true
   name                    = each.key
   regional                = var.regional_clusters
   region                  = each.value.region
