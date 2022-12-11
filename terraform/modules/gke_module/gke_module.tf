@@ -1,6 +1,6 @@
 module "gke" {
   for_each                = var.cluster_config
-  source                  = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster"
+  source                  = "terraform-google-modules/kubernetes-engine/google//modules/safer-cluster-update-variant"
   version                 = "24.0.0"
   project_id              = var.project_id
   network                 = var.network
@@ -73,5 +73,8 @@ module "gke" {
   cluster_dns_scope = each.value.cluster_dns_scope
   cluster_dns_domain = each.value.cluster_dns_domain
   gke_backup_agent_config = "true"
+  add_cluster_firewall_rules = "true"
+  add_master_webhook_firewall_rules = "true"
+  firewall_inbound_ports = ["443", "8443", "9443", "15017"]
 #  kubernetes_version = ""
 }
