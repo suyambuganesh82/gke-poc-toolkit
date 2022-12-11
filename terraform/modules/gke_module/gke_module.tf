@@ -8,7 +8,6 @@ module "gke" {
   ip_range_services       = var.ip_range_services
   release_channel         = var.release_channel
   initial_node_count      = var.initial_node_count
-  remove_default_node_pool = true
   name                    = each.key
   regional                = var.regional_clusters
   region                  = each.value.region
@@ -72,9 +71,9 @@ module "gke" {
   cluster_dns_provider = each.value.cluster_dns_provider
   cluster_dns_scope = each.value.cluster_dns_scope
   cluster_dns_domain = each.value.cluster_dns_domain
-  gke_backup_agent_config = "true"
-  add_cluster_firewall_rules = "true"
-  add_master_webhook_firewall_rules = "true"
+  gke_backup_agent_config = true
+  add_cluster_firewall_rules = true
+#  add_master_webhook_firewall_rules = "true"
   firewall_inbound_ports = ["443", "8443", "9443", "15017"]
 #  kubernetes_version = ""
 }
