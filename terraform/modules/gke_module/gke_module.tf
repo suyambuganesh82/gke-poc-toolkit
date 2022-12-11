@@ -72,7 +72,5 @@ module "gke" {
   cluster_dns_scope = each.value.cluster_dns_scope
   cluster_dns_domain = each.value.cluster_dns_domain
   gke_backup_agent_config = "true"
-  add_master_webhook_firewall_rules = "true"
-  firewall_inbound_ports = ["443", "8443", "9443", "15017"]
 #  kubernetes_version = ""
 }
