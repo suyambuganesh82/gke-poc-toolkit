@@ -37,7 +37,7 @@ module "gke" {
   // Presets for Linux Node Pool
   node_pools = [
     {
-      name               = format("linux-nodepool-%s", var.node_pool)
+      name               = format("%s", var.node_pool)
       initial_node_count = var.initial_node_count
       min_count          = each.value.min_node_count
       max_count          = each.value.max_node_count
@@ -47,22 +47,6 @@ module "gke" {
       machine_type       = each.value.linux_machine_type
       disk_type          = "pd-ssd"
       disk_size_gb       = 30
-      image_type         = "UBUNTU_CONTAINERD"
-      #    image_type         = "COS"
-      preemptible        = false
-      enable_secure_boot = true
-    },
-    {
-      name               = "cassandra"
-      initial_node_count = var.initial_node_count
-      min_count          = 3
-      max_count          = 5
-      auto_upgrade       = true
-      auto_repair        = true
-      node_metadata      = "GKE_METADATA"
-      machine_type       = "c2-standard-8"
-      disk_type          = "pd-ssd"
-      disk_size_gb       = 50
       image_type         = "UBUNTU_CONTAINERD"
       #    image_type         = "COS"
       preemptible        = false
