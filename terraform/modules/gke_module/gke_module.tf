@@ -37,7 +37,8 @@ module "gke" {
   // Presets for Linux Node Pool
   node_pools = [
     {
-      name               = format("%s", var.node_pool)
+#      name               = format("%s", var.node_pool)
+      name               = format("%s", each.key)
       initial_node_count = var.initial_node_count
       min_count          = each.value.min_node_count
       max_count          = each.value.max_node_count
