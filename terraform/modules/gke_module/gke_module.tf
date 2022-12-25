@@ -37,23 +37,92 @@ module "gke" {
   // Presets for Linux Node Pool
   node_pools = [
     {
-#      name               = format("%s", var.node_pool)
-      name               = format("%s", each.key)
-      initial_node_count = var.initial_node_count
-      min_count          = each.value.min_node_count
-      max_count          = each.value.max_node_count
+      name               = "service"
+      initial_node_count = 5
+      min_count          = 3
+      max_count          = 10
       auto_upgrade       = true
       auto_repair        = true
       node_metadata      = "GKE_METADATA"
-      machine_type       = each.value.linux_machine_type
+      machine_type       = "e2-standard-4"
       disk_type          = "pd-ssd"
       disk_size_gb       = 30
       image_type         = "UBUNTU_CONTAINERD"
-      #    image_type         = "COS"
+      preemptible        = false
+      enable_secure_boot = true
+    },
+    {
+      name               = "postgres"
+      initial_node_count = 3
+      min_count          = 4
+      max_count          = 4
+      auto_upgrade       = true
+      auto_repair        = true
+      node_metadata      = "GKE_METADATA"
+      machine_type       = "e2-standard-4"
+      disk_type          = "pd-ssd"
+      disk_size_gb       = 30
+      image_type         = "UBUNTU_CONTAINERD"
+      preemptible        = false
+      enable_secure_boot = true
+    },
+    {
+      name               = "cassandra"
+      initial_node_count = 3
+      min_count          = 3
+      max_count          = 5
+      auto_upgrade       = true
+      auto_repair        = true
+      node_metadata      = "GKE_METADATA"
+      machine_type       = "c2-standard-8"
+      disk_type          = "pd-ssd"
+      disk_size_gb       = 30
+      image_type         = "UBUNTU_CONTAINERD"
+      preemptible        = false
+      enable_secure_boot = true
+    },
+    {
+      name               = "pulsar"
+      initial_node_count = 3
+      min_count          = 3
+      max_count          = 5
+      auto_upgrade       = true
+      auto_repair        = true
+      node_metadata      = "GKE_METADATA"
+      machine_type       = "c2-standard-8"
+      disk_type          = "pd-ssd"
+      disk_size_gb       = 30
+      image_type         = "UBUNTU_CONTAINERD"
       preemptible        = false
       enable_secure_boot = true
     }
   ]
+
+  node_pools_taints = {
+    all = []
+
+    postgres = [
+      {
+        key    = "postgres"
+        value  = "test"
+        effect = "NO_SCHEDULE"
+      },
+    ]
+    cassandra = [
+      {
+        key    = "cassandra"
+        value  = "test"
+        effect = "NO_SCHEDULE"
+      },
+    ]
+    pulsar = [
+      {
+        key    = "pulsar"
+        value  = "test"
+        effect = "NO_SCHEDULE"
+      },
+    ]
+  }
 
   #  node_pools = var.cluster_node_pool
 
