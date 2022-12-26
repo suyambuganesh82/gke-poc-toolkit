@@ -38,7 +38,7 @@ module "gke" {
   node_pools = [
     {
       name               = "service"
-      initial_node_count = 5
+      initial_node_count = 2
       min_count          = 3
       max_count          = 10
       auto_upgrade       = true
@@ -53,7 +53,7 @@ module "gke" {
     },
     {
       name               = "postgres"
-      initial_node_count = 3
+      initial_node_count = 1
       min_count          = 4
       max_count          = 4
       auto_upgrade       = true
@@ -68,7 +68,7 @@ module "gke" {
     },
     {
       name               = "cassandra"
-      initial_node_count = 3
+      initial_node_count = 1
       min_count          = 3
       max_count          = 5
       auto_upgrade       = true
@@ -83,7 +83,7 @@ module "gke" {
     },
     {
       name               = "pulsar"
-      initial_node_count = 3
+      initial_node_count = 1
       min_count          = 3
       max_count          = 5
       auto_upgrade       = true
