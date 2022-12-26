@@ -83,6 +83,7 @@ locals {
       "${module.enabled_google_apis.project_id}=>roles/monitoring.viewer",
       "${module.enabled_google_apis.project_id}=>roles/stackdriver.resourceMetadata.writer",
       "${module.enabled_google_apis.project_id}=>roles/storage.objectViewer",
+      "${module.enabled_google_apis.project_id}=>roles/dns.admin",
     ]
     (local.kcc_service_account) = [
       "${module.enabled_google_apis.project_id}=>roles/owner",
